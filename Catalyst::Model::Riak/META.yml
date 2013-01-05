@@ -11,9 +11,9 @@ requires:
   Carp: 0
   Catalyst::Model: 0
   Catalyst::Utils: 0
-  Net::Riak: 0.31
+  Net::Riak: 0.16
 build_requires:
-  Test::More: 0.16
+  Test::More: 0
 provides:
   Catalyst::Helper::Model::Riak:
     file: lib/Catalyst/Helper/Model/Riak.pm
