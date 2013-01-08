@@ -283,8 +283,12 @@ Get or set the number of responding partitions to wait for while retrieving an o
 
 Repository
 
-http://github.com/Mainframe2008/CatRiak/tree/master/Catalyst::Model::Riak
-Pull request and additional contributors are welcome
+  https://github.com/Mainframe2008/CatRiak
+  Pull request and additional contributors are welcome
+
+Issue Tracker
+
+  https://github.com/Mainframe2008/CatRiak/issues
 
 =head1 AUTHOR
 

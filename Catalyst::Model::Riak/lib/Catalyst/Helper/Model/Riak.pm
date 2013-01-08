@@ -61,26 +61,22 @@ Makes tests.
 
 =head1 SUPPORT
 
-IRC
-
-  Join #catalyst on irc.perl.org and ask for Getty.
-
 Repository
 
-  https://github.com/Mainframe2008/Catalyst--Model--Riak.git
+  https://github.com/Mainframe2008/CatRiak
   Pull request and additional contributors are welcome
 
 Issue Tracker
 
-  https://github.com/Mainframe2008/CatRiak.git
+  https://github.com/Mainframe2008/CatRiak/issues
 
 =head1 AUTHOR
 
-Theo Bot <thg.bot@gmail.com> L<http://www.proxy.nl/>
+Theo Bot <nltbo@cpan.org> L<http://www.proxy.nl/>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Theo Bot
+This software is copyright (c) 2013 by Theo Bot
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
