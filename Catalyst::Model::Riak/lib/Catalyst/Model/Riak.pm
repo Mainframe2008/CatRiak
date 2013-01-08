@@ -294,7 +294,7 @@ Issue Tracker
 
 Theo Bot <nltbo@cpan.org> L<http://www.proxy.nl>
 
-=head COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2013 by Theo Bot
 
