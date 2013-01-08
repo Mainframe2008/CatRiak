@@ -1,0 +1,17 @@
+META.yml
+Build.PL
+Makefile.PL
+INSTALL
+Changes
+MANIFEST
+.gitignore
+README
+.project
+LICENSE
+lib
+lib/Catalyst
+lib/Catalyst/Helper
+lib/Catalyst/Helper/Model
+lib/Catalyst/Helper/Model/Riak.pm
+lib/Catalyst/Model
+lib/Catalyst/Model/Riak.pm
