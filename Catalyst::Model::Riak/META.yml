@@ -1,6 +1,6 @@
 ---
 name: Catalyst-Model-Riak
-version: 0.03
+version: 0.02
 author:
   - 'Theo Bot <nltbo@cpan.org>'
 abstract: Catalyst model for Basho Riak
