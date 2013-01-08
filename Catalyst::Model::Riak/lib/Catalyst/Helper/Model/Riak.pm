@@ -72,7 +72,7 @@ Repository
 
 Issue Tracker
 
-  https://github.com/Mainframe2008/Catalyst--Model--Riak.git
+  https://github.com/Mainframe2008/CatRiak.git
 
 =head1 AUTHOR
 
@@ -100,7 +100,7 @@ BEGIN { extends 'Catalyst::Model::Riak' };
 
 __PACKAGE__->config(
 	host => '[% host || 'http://localhost:8098' %]',
-	timeout => 900,
+	timeout => [% ua_timeout || '900' %],
 );
 
 =head1 NAME
