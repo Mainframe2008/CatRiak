@@ -3,7 +3,7 @@ BEGIN {
 	$Catalyst::Helper::Model::Riak::AUTHORITY = 'cpan::NLTBO';
 }
 BEGIN {
-	$Catalyst::Helper::Model::Riak::VERSION = '0.01';
+	$Catalyst::Helper::Model::Riak::VERSION = '0.02';
 }
 
 use strict;
