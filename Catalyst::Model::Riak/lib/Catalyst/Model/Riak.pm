@@ -11,12 +11,45 @@ use Moose;
 
 BEGIN { extends 'Catalyst::Model' }
 
-has host	=> ( isa => 'Str', is => 'ro', required => 1, default => sub { 'http://localhost:8098' } );
-has ua_timeout	=> ( isa => 'Int', is => 'ro', required => 1, default => 900 );
-has bucket	=> ( isa => 'Str', is => 'rw' );
-has dw		=> ( isa => 'Int', is => 'rw', default => 1, trigger => \&_dw_set );
-has w		=> ( isa => 'Int', is => 'rw', default => 1, trigger => \&_w_set );
-has r		=> ( isa => 'Int', is => 'rw', default => 1, trigger => \&_r_set );
+has host	=> ( 
+	isa => 'Str', 
+	is => 'ro', 
+	required => 1, 
+	default => sub { 'http://localhost:8098' } 
+);
+
+has ua_timeout	=> ( 
+	isa => 'Int', 
+	is => 'ro', 
+	required => 1, 
+	default => 900 
+);
+
+has dw		=> ( 
+	isa => 'Int', 
+	is => 'rw', 
+	default => 1, 
+	trigger => \&_dw_set 
+);
+
+has w		=> ( 
+	isa => 'Int', 
+	is => 'rw', 
+	default => 1, 
+	trigger => \&_w_set 
+);
+
+has r		=> ( 
+	isa => 'Int', 
+	is => 'rw', 
+	default => 1, 
+	trigger => \&_r_set 
+);
+
+has container	=> ( 
+	isa => 'Net::Riak::Bucket', 
+	is => 'rw' 
+);
 
 has 'client' => (
 	isa => 'Net::Riak',
@@ -38,23 +71,20 @@ sub _build_client {
 	return $conn;
 }
 
-sub _bucket {
+sub bucket {
 	my($self, $data) = @_;
-	my $bucket = undef;
 
-	if ( defined($data->{bucket}) ) {
-		$bucket = $self->client->bucket($data->{bucket});
-	} else {
-		if ( defined($self->bucket) ) {
-			$bucket = $self->_b;
-		}
+	ActiveCMDB->log->info($data);
+	if ( defined($data) ) {
+		$self->container($self->client->bucket($data));
 	}
 
-	return $bucket;
+	return $self->container;
 }
 
 sub buckets {
 	my($self) = @_;
+
 	return $self->client->all_buckets;
 }
 
@@ -64,7 +94,7 @@ sub create {
 
 	if ( defined($data->{key}) && defined($data->{value}) ) 
 	{
-		my $object = $self->client->new_object;
+		my $object = $self->_bucket->new_object($data->{key}, $data->{value});
 		return $object->store;
 	}
 }
@@ -85,10 +115,9 @@ sub get {
 	my($self, $data) = @_;
 	my $object = undef;
 
-	my $bucket = $self->_bucket($data);
 
 	if ( defined($data->{key}) ) {
-		$object = $bucket->get($data->{key});
+		$object = $self->bucket->get($data->{key});
 	}
 
 	return $object;
@@ -103,7 +132,7 @@ sub update {
 	my($self, $data) = @_;
 	
 	if ( defined($data->{key}) ) {
-		my $object = $self->get($data);
+		my $object = $self->get($data->{key});
 
 		if ( defined($object) ) {
 			$object->data($data->{value});
@@ -131,3 +160,141 @@ sub _r_set
 }
 
 1;
+
+__END__
+=pod
+
+=head1 NAME
+
+Catalyst::Model::Riak - Basho/Riak model class for Catalyst
+
+=head1 VERSION
+
+version 0.01
+
+=head1 SYNOPSYS
+
+	# Use this to create a new model
+	script/myapp_create.pl model ModelName Riak http:/192.168.0.1:8089 900
+	
+	
+	
+	# In you controller use
+	my $coder = JSON::XS->new->utf8->pretty->allow_nonref;
+	
+	#
+	# Set bucket
+	#
+	$c->model("ModelName")->bucket('Bucket');
+	
+	#
+	# Create a key/value pair in the bucket
+	$c->model('ModelName')->create( { key => 'key', value => $coder->encode($data) } );
+	
+	#
+	# Read key/value pair from the 'Bucket'
+	my $object = $c->model('ModelName')->get({ key => 'key' });
+	
+	#
+	# Update a key/value pair in the bucket
+	$c->model('ModelName')->update( { key => 'key', value => $code->encode($newdata) } );
+	
+	#
+	# Delete a key/value pair from the bucket
+	$c->model('ModelName')->delete( { key => 'key' } );
+
+	#
+	# Or
+	#
+	
+	#
+	# Create a key/value pair
+	my $object = $c->model("ModelName")->bucket('Container')->new_object('key', $coder->encode($data) );
+	$object->store;
+	
+	#
+	# Get a key/value pair
+	my $object = $c->model("ModelName")->bucket('Container')->get('key');
+	
+	#
+	# Update a key/value pair
+	$object->data($coder->encode($newdata));
+	
+	#
+	# Delete a key/value pair
+	$object->delete;
+	
+=head1 DESCRIPTION
+	
+Use this model set create a new L<Catalyst::Model::Riak> model for your Catalyst application.
+Check the L<Net::Riak> documentation for addtional information. Also visit L<http://www.basho.com> 
+for more information on Riak.
+
+=head1 METHODS
+
+=head2 bucket
+
+Set the bucket and returns a Net::Riak::Bucket object.
+
+	$c->model("ModelName")->bucket("Container");
+
+=head2 buckets
+
+Returns an array of all available buckets.
+
+=head2 create
+
+Creates a new key/value pair
+
+	$c->model("ModelName")->create({ key => 'keyname', value => $json_data });
+	
+
+=head2 delete
+
+Deletes a key/value pair
+
+=head2 get
+
+Get a key/value pair from the riak server. It returns a L<Net::Riak::Object>.
+
+=head2 read
+
+Synonym for get
+
+=head2 update
+
+Update a key/value pair
+
+$c->model('ModelName')->update( { key => 'key', value => $json_data } );
+
+=head2 dw
+
+Get or set the number of partitions to wait for write confirmation
+
+=head2 w
+
+Get or set the number of responding partitions to wait for while writing or updating a value
+
+=head2 r
+
+Get or set the number of responding partitions to wait for while retrieving an object
+
+=head1 SUPPORT
+
+Repository
+
+http://github.com/Mainframe2008/CatRiak/tree/master/Catalyst::Model::Riak
+Pull request and additional contributors are welcome
+
+=head1 AUTHOR
+
+Theo Bot <nltbo@cpan.org> L<http://www.proxy.nl>
+
+=head COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Theo Bot
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself
+
+=cut
