@@ -8,3 +8,4 @@ README
 LICENSE
 lib/Catalyst/Helper/Model/Riak.pm
 lib/Catalyst/Model/Riak.pm
+t/00.load.t
