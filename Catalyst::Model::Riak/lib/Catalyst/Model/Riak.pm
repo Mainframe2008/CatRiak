@@ -178,7 +178,6 @@ version 0.01
 	script/myapp_create.pl model ModelName Riak http:/192.168.0.1:8089 900
 	
 	
-	
 	# In you controller use
 	my $coder = JSON::XS->new->utf8->pretty->allow_nonref;
 	
@@ -265,7 +264,7 @@ Synonym for get
 
 Update a key/value pair
 
-$c->model('ModelName')->update( { key => 'key', value => $json_data } );
+	$c->model('ModelName')->update( { key => 'key', value => $json_data } );
 
 =head2 dw
 
