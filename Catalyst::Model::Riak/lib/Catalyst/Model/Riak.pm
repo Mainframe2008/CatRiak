@@ -3,7 +3,7 @@ BEGIN {
 	$Catalyst::Model::Riak::AUTHORITY = 'cpan:NLTBO';
 }
 BEGIN {
-	$Catalyst::Model::Riak::VERSION = '0.03';
+	$Catalyst::Model::Riak::VERSION = '[VERSION]';
 }
 
 use Net::Riak;
