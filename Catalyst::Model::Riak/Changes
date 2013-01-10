@@ -2,7 +2,7 @@ Revision history for Catalyst::Model::Riak
 
 0.03    2013-01-09:
 		Added tests
-		Fixed documenation
+		Fixed documentation
 
 0.01    2013-01-05:
 		Initial release.
