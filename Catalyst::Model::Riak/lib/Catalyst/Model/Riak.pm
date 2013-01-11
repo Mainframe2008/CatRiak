@@ -74,7 +74,6 @@ sub _build_client {
 sub bucket {
 	my($self, $data) = @_;
 
-	ActiveCMDB->log->info($data);
 	if ( defined($data) ) {
 		$self->container($self->client->bucket($data));
 	}
