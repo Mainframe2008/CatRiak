@@ -57,6 +57,11 @@ has 'client' => (
 	lazy_build => 1,
 );
 
+has 'object' => (
+	isa => 'Net::Riak::Object|Undef',
+	is  => 'rw'
+);
+
 sub _build_client {
 	my($self) = @_;
 
@@ -93,7 +98,7 @@ sub create {
 
 	if ( defined($data->{key}) && defined($data->{value}) ) 
 	{
-		my $object = $self->_bucket->new_object($data->{key}, $data->{value});
+		my $object = $self->bucket->new_object($data->{key}, $data->{value});
 		return $object->store;
 	}
 }
@@ -112,14 +117,15 @@ sub delete {
 
 sub get {
 	my($self, $data) = @_;
-	my $object = undef;
-
-
+	
 	if ( defined($data->{key}) ) {
-		$object = $self->bucket->get($data->{key});
+		my $object = $self->bucket->get($data->{key});
+		if ( $object->exists ) {
+			$self->object( $object );
+		} 
 	}
 
-	return $object;
+	return $self->object;
 }
 
 sub read {
@@ -136,6 +142,18 @@ sub update {
 		if ( defined($object) ) {
 			$object->data($data->{value});
 			return $object->store($self->w, $self->dw);
+		}
+	}
+}
+
+sub links {
+	my($self, $data) = @_;
+	if ( defined($data) && defined($data->{key}) )
+	{
+		my $object = $self->get($data->{key});
+		if ( defined($object) )
+		{
+			return $object->links();
 		}
 	}
 }
@@ -202,6 +220,10 @@ version 0.01
 	$c->model('ModelName')->delete( { key => 'key' } );
 
 	#
+	# Get linked objects
+	$c->model('ModelName')->links( { key => 'key' } );
+
+	#
 	# Or
 	#
 	
@@ -221,6 +243,7 @@ version 0.01
 	#
 	# Delete a key/value pair
 	$object->delete;
+
 	
 =head1 DESCRIPTION
 	
