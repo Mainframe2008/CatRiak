@@ -137,7 +137,7 @@ sub update {
 	my($self, $data) = @_;
 	
 	if ( defined($data->{key}) ) {
-		my $object = $self->get($data->{key});
+		my $object = $self->get({ key => $data->{key} });
 
 		if ( defined($object) ) {
 			$object->data($data->{value});
